@@ -65,7 +65,7 @@ def value_queries(df:pd.DataFrame):
       
       case "Amount":
         entry = input(f"Enter the Amount in € (comma->'.'): ")
-        entry = float(entry) if entry != "" else ""
+        entry = float(entry) if entry != "" else 0.0
         print("")
       
       case "Marke":
@@ -84,10 +84,15 @@ def input_Date():
   entry = input(f"here: ")
   if entry == "today":
     return f"{dt.today().day}.{dt.today().month}.{dt.today().year}"
+  elif entry == "":
+    if first_run:
+      print("Date from last entry will be assumed\n")
+      return df_table_vals.iloc[-1]["Date"][4:]
+    else:
+      return CURR_VALS[0]
   else:
-    print("Date from last entry will be assumed\n")
-    return df_table_vals.iloc[-1]["Date"][4:]
-
+    return entry
+  
 def input_Category():
   cat_list = ["Social","Groceries","Household","Clothing", "Misc", "Snacking",
             "School / Work", "Health/Cosmetics", "Emergency",
@@ -115,8 +120,15 @@ def input_Method():
     print(f"{key}: {value}")
   entry = input(f"Enter number here: ")
   print("")
-  return method_dict[int(entry)] if entry != "" else ""
+  if entry != "":
+    return method_dict[int(entry)]
+  else:
+    if first_run:
+      return df_table_vals.iloc[-1]["Method"]
+    else:
+      return CURR_VALS[2]
 
+first_run = True
 
 #Saving the table from the sheet as a DataFrame for further needs
 expense_table_vals = expense_table.get("values", [])
@@ -126,10 +138,11 @@ newrownum = len(expense_table_vals)+1   #tracking how far the sheet are already 
 
 # running the functions
 while True:
-    val_list = value_queries(df_table_vals)
-    insert_row(newrownum,val_list)
+    CURR_VALS = value_queries(df_table_vals)
+    insert_row(newrownum,CURR_VALS)
     newrownum += 1
 
     cont = input("Do you want to add another row? (yes/no): ")
+    first_run = False
     if cont.lower() != 'yes':
         break
