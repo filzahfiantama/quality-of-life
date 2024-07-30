@@ -104,7 +104,7 @@ def input_Category():
   return cat_dict[int(entry)] if entry != "" else ""
 
 def input_Method():
-  method_list = ["Card DB", "Payback PAY", "Card Commerz"
+  method_list = ["Card DB", "Payback PAY", "Card Commerz",
                "Card N26", "Cash", "Paypal", "Transfer"]
   method_dict = dict(zip(
                         list(range(len(method_list))),
