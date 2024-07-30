@@ -4,13 +4,13 @@ import os
 from datetime import datetime as dt
 import pandas as pd
 
-# Enter the path to where the auth key is
-os.chdir(r"D:\workingrepos\expense sheet")
 
 # Google Sheets API
 #Credentials
 from google.oauth2 import service_account
-
+# Enter the path to where the auth key is
+os.chdir(r"D:\workingrepos\expense sheet")
+# enter the file name of the keys
 SERVICE_ACCOUNT_FILE = 'keys_sheet-expense-auto-input.json'
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
@@ -61,29 +61,32 @@ def value_queries(df:pd.DataFrame):
       
       case "Name":
         entry = input(f"Enter the item name: ")
+        print("")
       
       case "Amount":
         entry = input(f"Enter the Amount in € (comma->'.'): ")
         entry = float(entry) if entry != "" else ""
+        print("")
       
       case "Marke":
         entry = input(f"Enter the brand / store: ")
+        print("")
       
       case "Notes":
         entry = input(f"Enter any additional notes: ")
+        print("")
     
     values.append(entry)
   return values
 
 def input_Date():
-  print(f"Enter a Date with Format 'dd.mm.yy', 'today' or 'last entry'")
+  print(f"Enter a Date with Format 'dd.mm.yy', 'today' or enter to copy last entry")
   entry = input(f"here: ")
   if entry == "today":
     return f"{dt.today().day}.{dt.today().month}.{dt.today().year}"
-  elif entry == "last entry":
-    return df_table_vals.iloc[-1]["Date"][4:]
   else:
-    return entry
+    print("Date from last entry will be assumed\n")
+    return df_table_vals.iloc[-1]["Date"][4:]
 
 def input_Category():
   cat_list = ["Social","Groceries","Household","Clothing", "Misc", "Snacking",
@@ -97,6 +100,7 @@ def input_Category():
   for key, value in cat_dict.items():
     print(f"{key}: {value}")
   entry = input(f"Enter number here: ")
+  print("")
   return cat_dict[int(entry)] if entry != "" else ""
 
 def input_Method():
@@ -110,6 +114,7 @@ def input_Method():
   for key, value in method_dict.items():
     print(f"{key}: {value}")
   entry = input(f"Enter number here: ")
+  print("")
   return method_dict[int(entry)] if entry != "" else ""
 
 
